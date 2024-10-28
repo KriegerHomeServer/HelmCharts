@@ -1,0 +1,55 @@
+secret:
+  create: true
+  name: lldap-credentials
+  lldapJwtSecret: "wobY6RK/Dc0vL21zFiIZs9iyVy0NQ3ldijYPQ4HLWTc="
+  lldapUserPass: "changeit"
+  lldapBaseDn: "dc=homeserver,dc=com"
+
+persistence:
+  enabled: true
+  storageClassName: ""
+  storageSize: "100Mi"
+  accessMode: "ReadWriteOnce"
+  localPath: ""
+  manualProvision: false       
+
+env:  
+  TZ: "CET"                 
+  GID: "1001"
+  UID: "1001"
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+replicaCount: 1
+
+image:
+  repository: "nitnelave/lldap"
+  tag: "latest"
+  pullPolicy: "IfNotPresent"
+
+hpa:
+  enabled: false
+
+service:
+  name: lldap-service
+  type: LoadBalancer
+  loadBalancerIP: ""
+  ports:
+    - name: ldap
+      port: 3890
+      targetPort: 3890
+    - name: http
+      port: 80
+      targetPort: 17170
+    - name: https
+      port: 443
+      targetPort: 17170
+
+ingress:
+  enabled: false
