@@ -32,3 +32,4 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           pages_branch: releases
+          skip_existing: true

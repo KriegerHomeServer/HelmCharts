@@ -5,6 +5,6 @@ metadata:
   name: blocky-configuration
   namespace: {{ .Values.namespace }}
 data:
-  config.yaml: |-
+  config.yml: |-
 {{ toYaml .Values.config | indent 4 }}
 {{- end -}}
