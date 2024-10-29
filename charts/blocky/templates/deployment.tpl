@@ -35,7 +35,11 @@ spec:
               subPath: config.yml
           ports:
             - containerPort: 53
+              protocol: TCP
+            - containerPort: 53
+              protocol: UDP
             - containerPort: {{ .Values.deployment.httpPort | default 4000 }}
+              protocol: TCP
       volumes:
         - name: blocky-config
           configMap:
