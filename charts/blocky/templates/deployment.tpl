@@ -31,7 +31,8 @@ spec:
               memory: {{ .Values.deployment.resources.requests.memory | default "64Mi" }}
           volumeMounts:
             - name: blocky-config
-              mountPath: /app
+              mountPath: /app/config.yaml
+              subPath: config.yaml
           ports:
             - containerPort: 53
             - containerPort: {{ .Values.deployment.httpPort | default 4000 }}
