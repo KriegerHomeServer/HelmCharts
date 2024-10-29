@@ -12,15 +12,22 @@ spec:
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
   ports:
-    - name: dns
+    - name: dns-tcp
       port: 53
       targetPort: 53
+      protocol: TCP
+    - name: dns-udp
+      port: 53
+      targetPort: 53
+      protocol: UDP
     - name: http
       port: 80
       targetPort: {{ .Values.deployment.httpPort | default 4000 }}
+      protocol: TCP
     - name: https
       port: 443
       targetPort: {{ .Values.deployment.httpPort | default 4000 }}
+      protocol: TCP
   selector:
     app: blocky
 {{- end -}}
