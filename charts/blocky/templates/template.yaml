@@ -1,0 +1,7 @@
+---
+{{ include "helm-charts.blocky.configmap" . }}
+---
+{{ include "helm-charts.blocky.deployment" . }}
+---
+{{ include "helm-charts.blocky.service" . }}
+---

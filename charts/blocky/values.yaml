@@ -1,0 +1,39 @@
+# Deployment configuration for Blocky
+deployment:
+  replicaCount: 1
+  image:
+    repository: "spx01/blocky"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+  resources:
+    limits:
+      cpu: 50m
+      memory: 64Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  httpPort: 4000
+
+# Service configuration for Blocky
+service:
+  type: LoadBalancer
+
+# Configuration for Blocky
+config:
+  upstreams:
+    groups:
+      default:
+        - 8.8.8.8
+        - 8.8.4.4
+
+  blocking:
+    denylists:
+      ads:
+        - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    clientGroupsBlock:
+      default:
+        - ads
+
+  ports:
+    http: 4000
+    dns: 53
