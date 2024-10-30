@@ -9,6 +9,7 @@ spec:
   jobTemplate:
     spec:
       template:
+        serviceAccountName: blocky-cronjob-sa
         spec:
           containers:
           - name: dns-mapping-job
@@ -20,17 +21,20 @@ spec:
               export DNS_MAPPINGS=$(kubectl get dnsmapping -n {{ .Values.namespace }} -o jsonpath='{range .items[*]}{.spec.domain}: {.spec.ip}{"\n"}{end}');
               
               if [ -z "${DNS_MAPPINGS}" ]; then
-                echo "No DnsMapping resources found.";
-                exit 0;
+                  echo "No DnsMapping resources found.";
+                  exit 0;
               fi
 
               CURRENT_CONFIG=$( kubectl get configmap/blocky-configuration -n {{ .Values.namespace }} -o jsonpath='{.data.config\.yml}' );
 
               NEW_CONFIG=$( echo "${CURRENT_CONFIG}" | yq '.customDNS.mapping = env(DNS_MAPPINGS)' - | sed ':a;N;$!ba;s/\n/\\n/g' );
 
-              kubectl patch configmap/blocky-configuration -n {{ .Values.namespace }} --type='json' -p "[{ \"op\": \"replace\", \"path\": \"/data/config.yml\", \"value\": \"${NEW_CONFIG}\" }]";
+              kubectl patch configmap/blocky-configuration -n {{ .Values.namespace }} --type='json' -p "[{ \"op\": \"replace\", \"path\": \"/data/config.yml\", \"value\": \"${NEW_CONFIG}\" }]" | grep "no change";
 
-              kubectl rollout restart deployment/blocky -n {{ .Values.namespace }};
+              if [[ $? -eq 1 ]]; then
+                  kubectl rollout restart deployment/blocky -n {{ .Values.namespace }};
+              fi
+
 
           restartPolicy: Never
 {{- end -}}

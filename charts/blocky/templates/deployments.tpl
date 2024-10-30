@@ -18,7 +18,6 @@ spec:
       labels:
         app: blocky
     spec:
-      serviceAccountName: blocky-cronjob-sa
       containers:
         - name: app-blocky
           image: "{{ .Values.deployment.image.repository | default "spx01/blocky" }}:{{ .Values.deployment.image.tag | default "latest" }}"
