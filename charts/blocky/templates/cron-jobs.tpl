@@ -17,7 +17,20 @@ spec:
             - /bin/bash
             - -c
             - |
-              DNS_MAPPINGS=$(kubectl get dnsmappings -A -o yaml)
-              echo "${DNS_MAPPINGS}"
+              export DNS_MAPPINGS=$(kubectl get dnsmapping -n {{ .Values.namespace }} -o jsonpath='{range .items[*]}{.spec.domain}: {.spec.ip}{"\n"}{end}');
+              
+              if [ -z "${DNS_MAPPINGS}" ]; then
+                echo "No DnsMapping resources found.";
+                exit 0;
+              fi
+
+              CURRENT_CONFIG=$( kubectl get configmap/blocky-configuration -n {{ .Values.namespace }} -o jsonpath='{.data.config\.yml}' );
+
+              NEW_CONFIG=$( echo "${CURRENT_CONFIG}" | yq '.customDNS.mapping = env(DNS_MAPPINGS)' - | sed ':a;N;$!ba;s/\n/\\n/g' );
+
+              kubectl patch configmap/blocky-configuration -n {{ .Values.namespace }} --type='json' -p "[{ \"op\": \"replace\", \"path\": \"/data/config.yml\", \"value\": \"${NEW_CONFIG}\" }]";
+
+              kubectl rollout restart deployment/blocky -n {{ .Values.namespace }};
+
           restartPolicy: Never
 {{- end -}}
