@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: configmap-access
+  name: read-write-configmaps
   namespace: {{ .Release.Namespace }}
 rules:
 - apiGroups: [""]
