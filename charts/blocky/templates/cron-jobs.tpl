@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: update-blocky-dns-mappings-job
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
@@ -25,14 +25,14 @@ spec:
                   exit 0;
               fi
 
-              CURRENT_CONFIG=$( kubectl get configmap/blocky-configuration -n {{ .Values.namespace }} -o jsonpath='{.data.config\.yml}' );
+              CURRENT_CONFIG=$( kubectl get configmap/blocky-configuration -n {{ .Release.Namespace }} -o jsonpath='{.data.config\.yml}' );
 
               NEW_CONFIG=$( echo "${CURRENT_CONFIG}" | yq '.customDNS.mapping = env(DNS_MAPPINGS)' - | sed ':a;N;$!ba;s/\n/\\n/g' );
 
-              kubectl patch configmap/blocky-configuration -n {{ .Values.namespace }} --type='json' -p "[{ \"op\": \"replace\", \"path\": \"/data/config.yml\", \"value\": \"${NEW_CONFIG}\" }]" | grep "no change";
+              kubectl patch configmap/blocky-configuration -n {{ .Release.Namespace }} --type='json' -p "[{ \"op\": \"replace\", \"path\": \"/data/config.yml\", \"value\": \"${NEW_CONFIG}\" }]" | grep "no change";
 
               if [[ $? -eq 1 ]]; then
-                  kubectl rollout restart deployment/blocky -n {{ .Values.namespace }};
+                  kubectl rollout restart deployment/blocky -n {{ .Release.Namespace }};
               fi
 
 
