@@ -9,8 +9,8 @@ spec:
   jobTemplate:
     spec:
       template:
-        serviceAccountName: blocky-cronjob-sa
         spec:
+          serviceAccountName: blocky-cronjob-sa
           containers:
           - name: dns-mapping-job
             image: teegank/alpine-kubectl:latest
