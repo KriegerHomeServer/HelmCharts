@@ -8,7 +8,7 @@ subjects:
   name: blocky-cronjob-sa
   namespace: {{ .Release.Namespace }}
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: read-dnsmappings
   apiGroup: rbac.authorization.k8s.io
 {{- end -}}
