@@ -5,7 +5,7 @@ metadata:
   name: update-blocky-dns-mappings-job
   namespace: {{ .Values.namespace }}
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "*/1 * * * *"
   jobTemplate:
     spec:
       template:
@@ -18,7 +18,7 @@ spec:
             - /bin/bash
             - -c
             - |
-              export DNS_MAPPINGS=$(kubectl get dnsmapping -n {{ .Values.namespace }} -o jsonpath='{range .items[*]}{.spec.domain}: {.spec.ip}{"\n"}{end}');
+              export DNS_MAPPINGS=$(kubectl get dnsmapping -A -o jsonpath='{range .items[*]}{.spec.domain}: {.spec.ip}{"\n"}{end}');
               
               if [ -z "${DNS_MAPPINGS}" ]; then
                   echo "No DnsMapping resources found.";
