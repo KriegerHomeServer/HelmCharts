@@ -1,4 +1,4 @@
-{{- define "helm-charts.blocky.service" -}}
+{{- define "helm-charts.blocky.services" -}}
 apiVersion: v1
 kind: Service
 metadata:

@@ -1,4 +1,4 @@
-{{- define "helm-charts.blocky.configmap" -}}
+{{- define "helm-charts.blocky.configmaps" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -25,7 +25,6 @@ config:
       default:
         - 8.8.8.8
         - 8.8.4.4
-
   blocking:
     denylists:
       ads:
@@ -33,7 +32,6 @@ config:
     clientGroupsBlock:
       default:
         - ads
-
   ports:
     http: 4000
     dns: 53

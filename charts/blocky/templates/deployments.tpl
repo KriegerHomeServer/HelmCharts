@@ -1,4 +1,4 @@
-{{- define "helm-charts.blocky.deployment" -}}
+{{- define "helm-charts.blocky.deployments" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
